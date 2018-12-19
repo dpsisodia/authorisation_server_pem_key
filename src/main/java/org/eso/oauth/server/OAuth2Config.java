@@ -22,14 +22,15 @@ public class OAuth2Config extends AuthorizationServerConfigurerAdapter {
 	@Autowired
 	private AuthenticationManager authenticationManager;
 
+	@Value("${public_key}")
+	private String publicKey;
 	
-	@Value("${public_key}") String publicKey;
-	@Value("${private_key}") String privateKey;
-	
+	@Value("${private_key}")
+	private String privateKey;
+
 	@Override
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-		endpoints.authenticationManager(authenticationManager).tokenStore(tokenStore()).tokenEnhancer(tokenEnhancer())
-				;
+		endpoints.authenticationManager(authenticationManager).tokenStore(tokenStore()).tokenEnhancer(tokenEnhancer());
 	}
 
 	@Override
@@ -41,7 +42,7 @@ public class OAuth2Config extends AuthorizationServerConfigurerAdapter {
 	public TokenStore tokenStore() {
 		return new JwtTokenStore(tokenEnhancer());
 	}
-	
+
 	@Bean
 	public JwtAccessTokenConverter tokenEnhancer() {
 		JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
@@ -50,16 +51,16 @@ public class OAuth2Config extends AuthorizationServerConfigurerAdapter {
 		return converter;
 	}
 
-	 @Bean
-	 public static NoOpPasswordEncoder passwordEncoder() {
-	  return (NoOpPasswordEncoder) NoOpPasswordEncoder.getInstance();
-	 }
-	 
+	@Bean
+	public static NoOpPasswordEncoder passwordEncoder() {
+		return (NoOpPasswordEncoder) NoOpPasswordEncoder.getInstance();
+	}
+
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-		clients.inMemory().withClient("test").secret("Gtest")
-				.authorizedGrantTypes("password","client_credentials")
-				.scopes("read", "write")
-				.accessTokenValiditySeconds(3000);
+		clients.inMemory()
+				.withClient("test").secret("Gtest")
+				.authorizedGrantTypes("client_credentials")
+				.scopes("read", "write").accessTokenValiditySeconds(3000);
 	}
 }
