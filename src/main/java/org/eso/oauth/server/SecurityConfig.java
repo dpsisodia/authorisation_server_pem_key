@@ -24,8 +24,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests().antMatchers("/oauth/**", "/auth/oauth/**").permitAll()
 			.anyRequest().authenticated()
 			.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.NEVER);
-//			.and().httpBasic();
-//			.and().csrf().disable();
 	}
 
 }
